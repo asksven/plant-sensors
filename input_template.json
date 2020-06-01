@@ -1,0 +1,12 @@
+[
+  {
+    "mac": "xx:xx:xx:xx:xx:xx",
+    "plant": "Plant1",
+    "id": 1
+  },
+  {
+    "mac": "yy:yy:yy:yy:yy:yy",
+    "plant": "Plant2",
+    "id": 2
+  }
+]

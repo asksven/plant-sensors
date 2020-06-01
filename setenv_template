@@ -1,0 +1,6 @@
+# !/bin/bash
+export USER=<influxdb-user>
+export PASSWORD=<influxdb-password>
+export DBNAME=nfluxdb-database-name, e.g. plants>
+export HOST=<influxdb-url>
+export PORT=<influxdb-port (default 8086)>
