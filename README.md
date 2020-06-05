@@ -48,6 +48,7 @@ Once you have tested everything you can add it as a scheduled cronjob, e.g. to r
 Open your cron-config: `vrontab -e`, and add this:
 
 ```
-*/15 * * * * cd <your-dir> && source setenv && python poller.py
+*/15 * * * * cd /home/pi/git/plant-sensors && ./run.sh
 ```
 
+`run.sh` is just a wrapper that writes the output to `logs`. Once your setup runs properly you can remove the logging part.

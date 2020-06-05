@@ -1,2 +1,3 @@
 setenv
 input.json
+logs/**
