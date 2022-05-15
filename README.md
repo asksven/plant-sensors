@@ -45,7 +45,7 @@ python poller.py
 
 Once you have tested everything you can add it as a scheduled cronjob, e.g. to run every 15 minutes.
 
-Open your cron-config: `vrontab -e`, and add this:
+Open your cron-config: `crontab -e`, and add this:
 
 ```
 */15 * * * * cd /home/pi/git/plant-sensors && ./run.sh
