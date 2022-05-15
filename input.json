@@ -1,0 +1,37 @@
+[
+  {
+    "mac": "80:EA:CA:89:66:55",
+    "plant": "Zitrus gross",
+    "id": 1
+  },
+  {
+    "mac": "80:EA:CA:89:66:55",
+    "plant": "Capsicum gelb",
+    "id": 2
+  },
+  {
+    "mac": "80:EA:CA:89:5F:93",
+    "plant": "Capsicum rot",
+    "id": 4
+  },
+  {
+    "mac": "80:EA:CA:89:5F:93",
+    "plant": "Schefflera",
+    "id": 5
+  },
+  {
+    "mac": "80:EA:CA:89:6D:AC",
+    "plant": "Zitrus klein",
+    "id": 7
+  },
+  {
+    "mac": "80:EA:CA:89:63:A9",
+    "plant": "Lavendel",
+    "id": 9
+  },
+  {
+    "mac": "80:EA:CA:89:61:6E",
+    "plant": "Himalaya Senecio",
+    "id": 11
+  }
+]

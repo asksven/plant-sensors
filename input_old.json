@@ -1,0 +1,59 @@
+[
+  {
+    "mac": "80:EA:CA:89:66:55",
+    "plant": "Zitrus",
+    "id": 1
+  },
+  {
+    "mac": "80:EA:CA:89:5F:8B",
+    "plant": "Olivenbaum",
+    "id": 2
+  },
+  {
+    "mac": "80:EA:CA:89:61:42",
+    "plant": "Zantesdeschia",
+    "id": 3
+  },
+  {
+    "mac": "80:EA:CA:89:5D:CC",
+    "plant": "Philodendron",
+    "id": 4
+  },
+  {
+    "mac": "80:EA:CA:89:5F:93",
+    "plant": "Zamioculcas",
+    "id": 5
+  },
+  {
+    "mac": "80:EA:CA:89:67:87",
+    "plant": "Dracaenea Fragrans",
+    "id": 6
+  },
+  {
+    "mac": "80:EA:CA:89:6D:AC",
+    "plant": "Tomaten",
+    "id": 7
+  },
+  {
+    "mac": "80:EA:CA:89:60:F3",
+    "plant": "Orangen",
+    "id": 8
+  },
+  {
+    "mac": "80:EA:CA:89:63:A9",
+    "plant": "Vriesea",
+    "id": 9
+  },
+  {
+    "mac": "80:EA:CA:89:69:23",
+    "plant": "Kaffee",
+    "id": 10
+  },
+  {
+    "mac": "80:EA:CA:89:61:6E",
+    "plant": "Hedera",
+    "id": 11
+  }
+
+]
+

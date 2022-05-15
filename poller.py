@@ -2,13 +2,27 @@ from miflora.miflora_poller import MiFloraPoller
 from btlewrap.bluepy import BluepyBackend
 from bluepy.btle import BTLEDisconnectError
 from btlewrap.base import BluetoothBackendException
-from influxdb import InfluxDBClient
+from influxdb_client import InfluxDBClient
 import json
 from datetime import datetime
 import sys
 import os
+from influxdb_client.client.exceptions import InfluxDBError
+from influxdb_client.client.write_api import SYNCHRONOUS
 
-MANDATORY_ENV_VARS = ["USER", "PASSWORD", "DBNAME", "HOST", "PORT"]
+class BatchingCallback(object):
+
+    def success(self, conf: (str, str, str), data: str):
+        print(f"Written batch: {conf}, data: {data}")
+
+    def error(self, conf: (str, str, str), data: str, exception: InfluxDBError):
+        print(f"Cannot write batch: {conf}, data: {data} due: {exception}")
+
+    def retry(self, conf: (str, str, str), data: str, exception: InfluxDBError):
+        print(f"Retryable error occurs for batch: {conf}, data: {data} retry: {exception}")
+
+
+MANDATORY_ENV_VARS = ["TOKEN", "ORG", "BUCKET", "URL"]
 
 try:
     for var in MANDATORY_ENV_VARS:
@@ -43,12 +57,11 @@ except:
 
 try:
     client = InfluxDBClient(
-        os.getenv('HOST', ''),
-        os.getenv('PORT', '8086'),
-        os.getenv('USER', ''),
-        os.getenv('PASSWORD', ''),
-        os.getenv('DBNAME', ''),
-        ssl=True, verify_ssl=True)
+        url=os.getenv('URL', ''),
+        token=os.getenv('TOKEN', ''),
+        org=os.getenv('ORG', ''),
+        verify_ssl=True)
+    print("Connected")
 except:
     print("An unexpected error occured when connecting to the database. Aborting")
     sys.exc_info()
@@ -79,28 +92,33 @@ for item in json_array:
             print("!!! A BLE error occured: retrying", err2)
         finally:
           retries += 1
+    # if not synced we just skip
+    if synced:
+        now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
+        json_body = [ \
+          {"measurement": "plant_sensor", \
+          "tags": {"id": item['id'], "plant": item['plant'], "mac": item['mac']}, \
+          "time": now, \
+          "fields": { \
+              "battery": poller.battery_level(), \
+              "temperature": poller.parameter_value('temperature'), \
+              "light": poller.parameter_value('light'), \
+              "moisture": poller.parameter_value('moisture'), \
+              "conductivity": poller.parameter_value('conductivity') \
+          }}]
 
-    now = datetime.utcnow().strftime('%Y-%m-%dT%H:%M:%SZ')
-    json_body = [ \
-      {"measurement": "plant_sensor", \
-      "tags": {"id": item['id'], "plant": item['plant'], "mac": item['mac']}, \
-      "time": now, \
-      "fields": { \
-          "battery": poller.battery_level(), \
-          "temperature": poller.parameter_value('temperature'), \
-          "light": poller.parameter_value('light'), \
-          "moisture": poller.parameter_value('moisture'), \
-          "conductivity": poller.parameter_value('conductivity') \
-      }}]
-
-#    print(json_body)
-    try:
-        client.write_points(json_body)
-        result = client.query('select temperature from plant_sensor;')
-        print(">>> Written")
-#        print("Result: {0}".format(result))
-    except requests.exceptions.ConnectionError as err:
-        print("!!! Connection error: ", format(err))
-    except:
-        print("!!! An unexpected error occured when connecting to the database. Aborting")
-        sys.exc_info()
+        print(json_body)
+        try:
+            callback = BatchingCallback()
+            with client.write_api(success_callback=callback.success,
+                    error_callback=callback.error,
+                    retry_callback=callback.retry,
+                    write_options=SYNCHRONOUS) as write_api:
+                 write_api.write(
+                          bucket=os.getenv('BUCKET', ''),
+                          org=os.getenv('ORG', ''),
+                          record=json_body)
+        except Exception as e:
+            print("!!! An unexpected error occured when connecting to the database. Aborting")
+            print(e)
+            sys.exc_info()
